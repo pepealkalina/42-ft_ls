@@ -6,7 +6,7 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:41 by pepealkalin       #+#    #+#             */
-/*   Updated: 2024/11/12 13:13:38 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/01/25 17:59:16 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,10 @@ int main(int argc, char const *argv[])
     {
         int is_dir = parse_dir(argv[1], &ls_info);
         if (argc == 2 && is_dir)
-
+        {
+            read_files(&ls_info);
+            print_files_std(&ls_info);
+        }
     }
     ft_free(&ls_info);
     return 0;
