@@ -6,7 +6,7 @@
 /*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:41 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/02/02 17:09:48 by preina-g         ###   ########.fr       */
+/*   Updated: 2025/02/02 17:19:44 by preina-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int  parse_dir(const char dir[256], t_info *ls_info)
 }
 void    read_files(t_info *ls_info, char flag)
 {
+    (void)flag;
     int len_dir = dirlen(ls_info);
     ls_info->dir = opendir(ls_info->dir_path);
     int i = 0;
@@ -37,14 +38,9 @@ void    read_files(t_info *ls_info, char flag)
     while (i < len_dir)
     {
         ls_info->files_array[i] = readdir(ls_info->dir);
-        if(parse_dir(ls_info->files_array[i]->d_name, ls_info) && flag == "R")
-            read_files(ls_info, flag);
         i++;
     }
     closedir(ls_info->dir);
-    sort_files(ls_info);
-    print_files_std(ls_info);
-    free(ls_info->files_array);
 }
 
 void    sort_files(t_info *ls_info)
@@ -110,6 +106,8 @@ int main(int argc, char const *argv[])
     {
         parse_dir(".", &ls_info);
         read_files(&ls_info, 0);
+        sort_files(&ls_info);
+        print_files_std(&ls_info);
     }
     else if (argc > 1)
     {
