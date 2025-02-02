@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
+/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:41 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/01/25 19:15:42 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/02/02 17:09:48 by preina-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int  parse_dir(char const *dir, t_info *ls_info)
+
+
+int  parse_dir(const char dir[256], t_info *ls_info)
 {
     // check if the first argument is a flag
     ls_info->dir = opendir(dir);
@@ -24,21 +26,25 @@ int  parse_dir(char const *dir, t_info *ls_info)
     ls_info->dir_path = dir;
     return (1);
 }
-void    read_files(t_info *ls_info)
+void    read_files(t_info *ls_info, char flag)
 {
     int len_dir = dirlen(ls_info);
     ls_info->dir = opendir(ls_info->dir_path);
     int i = 0;
-
     ls_info->files_array = (struct dirent **)malloc(len_dir * sizeof(struct dirent *));
     if (!ls_info->files_array)
         return ;
     while (i < len_dir)
     {
         ls_info->files_array[i] = readdir(ls_info->dir);
+        if(parse_dir(ls_info->files_array[i]->d_name, ls_info) && flag == "R")
+            read_files(ls_info, flag);
         i++;
     }
     closedir(ls_info->dir);
+    sort_files(ls_info);
+    print_files_std(ls_info);
+    free(ls_info->files_array);
 }
 
 void    sort_files(t_info *ls_info)
@@ -103,8 +109,7 @@ int main(int argc, char const *argv[])
     if (argc == 1)
     {
         parse_dir(".", &ls_info);
-        read_files(&ls_info);
-        print_files_std(&ls_info);
+        read_files(&ls_info, 0);
     }
     else if (argc > 1)
     {
@@ -114,7 +119,7 @@ int main(int argc, char const *argv[])
             int is_dir = parse_dir(argv[1], &ls_info);
             if (is_dir)
             {
-                read_files(&ls_info);
+                read_files(&ls_info, 0);
                 sort_files(&ls_info);
                 print_files_std(&ls_info);
             }

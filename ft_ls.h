@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
+/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:31 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/01/25 19:15:41 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/02/02 16:46:48 by preina-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void    sort_files(t_info *ls_info);
 
     @param ls_info: contains the info of the dir 
 */
-void    read_files(t_info *ls_info);
+void    read_files(t_info *ls_info, char flag);
 
 /*
     @brief Print the files the dir but not print . and ..
