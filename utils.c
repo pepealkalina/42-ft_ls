@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
+/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 13:13:43 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/01/25 19:15:50 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/02/02 17:32:11 by preina-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 int ft_strlen(const char *string)
 {
     int i = 0;
+    if (!string)
+        return(i);
     while (string[i])
         i++;
     return(i);
@@ -40,8 +42,8 @@ void    ft_swap(void **arr, int i, int j)
 int	ft_strncmp(char *s1, char *s2, unsigned int n)
 {
 	unsigned int	i;
-
 	i = 0;
+
 	while ((s1[i] || s2[i]) && i < n)
 	{
 		if (s1[i] < s2[i])

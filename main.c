@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
+/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:41 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/01/25 19:15:42 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/02/02 18:02:41 by preina-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void    read_files(t_info *ls_info)
     ls_info->dir = opendir(ls_info->dir_path);
     int i = 0;
 
-    ls_info->files_array = (struct dirent **)malloc(len_dir * sizeof(struct dirent *));
+    ls_info->files_array = (struct dirent **)malloc((len_dir + 1) * sizeof(struct dirent *));
     if (!ls_info->files_array)
         return ;
     while (i < len_dir)
@@ -38,7 +38,6 @@ void    read_files(t_info *ls_info)
         ls_info->files_array[i] = readdir(ls_info->dir);
         i++;
     }
-    closedir(ls_info->dir);
 }
 
 void    sort_files(t_info *ls_info)
@@ -62,7 +61,7 @@ void    sort_files(t_info *ls_info)
 
 void    print_files_std(t_info *ls_info)
 {
-    int i = 2;
+    int i = 0;
     while (ls_info->files_array[i])
     {
         if (ls_info->files_array[i]->d_name[0] == '.')
@@ -74,6 +73,7 @@ void    print_files_std(t_info *ls_info)
         write(1, " ", 1);
         i++;
     }
+    write(1, "\n", 1);
 }
 
 //Write the not dir error msg and exits
