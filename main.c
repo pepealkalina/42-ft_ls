@@ -6,70 +6,71 @@
 /*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:41 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/02/02 18:02:41 by preina-g         ###   ########.fr       */
+/*   Updated: 2025/02/08 17:00:42 by preina-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int  parse_dir(char const *dir, t_info *ls_info)
+DIR  *parse_dir(char const *dir)
 {
     // check if the first argument is a flag
-    ls_info->dir = opendir(dir);
+    DIR *is_dir = opendir(dir);
     if (dir[0] == '-')
         return (0);
-    else if (!ls_info->dir)
+    else if (!is_dir)
         return (0);
-    
-    ls_info->dir_path = dir;
-    return (1);
+    return (is_dir);
 }
-void    read_files(t_info *ls_info)
+void    read_files(char *dir_path)
 {
-    int len_dir = dirlen(ls_info);
-    ls_info->dir = opendir(ls_info->dir_path);
-    int i = 0;
+    DIR *dir = parse_dir(dir_path);
 
-    ls_info->files_array = (struct dirent **)malloc((len_dir + 1) * sizeof(struct dirent *));
-    if (!ls_info->files_array)
-        return ;
-    while (i < len_dir)
+    if (dir)
     {
-        ls_info->files_array[i] = readdir(ls_info->dir);
-        i++;
+        int len_dir = dirlen(dir);
+        dir = opendir(dir_path);
+        struct dirent ** dir_files = (struct dirent **)malloc((len_dir + 1) * sizeof(struct dirent *));
+        if (!dir_files)
+            return ;
+        for (size_t i = 0; i < len_dir; i++)
+            dir_files[i] = readdir(dir);
+        sort_files(dir_files);
+        print_files_std(dir_files);
+        free(dir_files);
+        closedir(dir);
     }
 }
 
-void    sort_files(t_info *ls_info)
+void    sort_files(struct dirent **files_array)
 {
     int i = 2;
-    while (ls_info->files_array[i])
+    while (files_array[i])
     {
         int j = 2;
-        while (ls_info->files_array[j])
+        while (files_array[j])
         {
-            if (ft_strncmp(ls_info->files_array[i]->d_name, \
-            ls_info->files_array[j]->d_name, \
-            ft_strlen(ls_info->files_array[j]->d_name)) == -1)
-                ft_swap((void **)ls_info->files_array, i, j);
+            if (ft_strncmp(files_array[i]->d_name, \
+            files_array[j]->d_name, \
+            ft_strlen(files_array[j]->d_name)) == -1)
+                ft_swap((void **)files_array, i, j);
             j++;
         }
         i++;
     }
-    
 }
 
-void    print_files_std(t_info *ls_info)
+void    print_files_std(struct dirent **files_array)
 {
     int i = 0;
-    while (ls_info->files_array[i])
+    while (files_array[i])
     {
-        if (ls_info->files_array[i]->d_name[0] == '.')
+        if (files_array[i]->d_name[0] == '.')
         {
             i++;
             continue;
         }
-        write(1, ls_info->files_array[i]->d_name, ft_strlen(ls_info->files_array[i]->d_name));
+        write(1, files_array[i]->d_name, ft_strlen(files_array[i]->d_name));
         write(1, " ", 1);
         i++;
     }
@@ -96,32 +97,6 @@ void    ft_free(t_info *ls_info)
 
 int main(int argc, char const *argv[])
 {
-    // saves the necessary info for doing ls in ls info
-    t_info ls_info;
-
-    // if there no parametres executes ls in current directory that is .
-    if (argc == 1)
-    {
-        parse_dir(".", &ls_info);
-        read_files(&ls_info);
-        print_files_std(&ls_info);
-    }
-    else if (argc > 1)
-    {
-        // if there one parametre check if is a dir and executes ls in that dir
-        if (argc == 2)
-        {
-            int is_dir = parse_dir(argv[1], &ls_info);
-            if (is_dir)
-            {
-                read_files(&ls_info);
-                sort_files(&ls_info);
-                print_files_std(&ls_info);
-            }
-            else
-                ft_not_dir_error(argv[1]);
-        }
-    }
-    ft_free(&ls_info);
+    read_files(".");
     return 0;
 }

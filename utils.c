@@ -6,7 +6,7 @@
 /*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 13:13:43 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/02/02 17:32:11 by preina-g         ###   ########.fr       */
+/*   Updated: 2025/02/08 16:52:01 by preina-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ int ft_strlen(const char *string)
     return(i);
 }
 
-int dirlen(t_info *ls_info)
+int dirlen(DIR *dir)
 {
     int i = 0;
 
-    while(readdir(ls_info->dir) != NULL)
+    while(readdir(dir) != NULL)
         i++;
     return (i);
-    closedir(ls_info->dir);
+    closedir(dir);
 }
 
 void    ft_swap(void **arr, int i, int j)

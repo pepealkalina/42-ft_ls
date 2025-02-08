@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
+/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:31 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/01/25 19:15:41 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/02/08 16:59:01 by preina-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,21 +90,21 @@ int	    ft_strncmp(char *s1, char *s2, unsigned int n);
 
     @param ls_info: contains the info of the dir 
 */
-void    sort_files(t_info *ls_info);
+void    sort_files(struct dirent **files_array);
 
 /*
     @brief read the files in a dir an saves them in ls_info->files_array
 
     @param ls_info: contains the info of the dir 
 */
-void    read_files(t_info *ls_info);
+void    read_files();
 
 /*
     @brief Print the files the dir but not print . and ..
 
     @param ls_info: contains the info of the dir 
 */
-void    print_files_std(t_info *ls_info);
+void    print_files_std(struct dirent **files_array);
 
 
 #endif
