@@ -6,17 +6,19 @@
 /*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:41 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/02/08 17:00:42 by preina-g         ###   ########.fr       */
+/*   Updated: 2025/02/08 17:52:05 by preina-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-DIR  *parse_dir(char const *dir)
+DIR *parse_dir(char const *dir)
 {
     // check if the first argument is a flag
     DIR *is_dir = opendir(dir);
-    if (dir[0] == '-')
+    if (!dir)
+        return (0);
+    else if (dir[0] == '-')
         return (0);
     else if (!is_dir)
         return (0);
@@ -33,13 +35,21 @@ void    read_files(char *dir_path)
         struct dirent ** dir_files = (struct dirent **)malloc((len_dir + 1) * sizeof(struct dirent *));
         if (!dir_files)
             return ;
-        for (size_t i = 0; i < len_dir; i++)
+        for (int i = 0; i < len_dir; i++)
             dir_files[i] = readdir(dir);
+        for (int j = 0; j < len_dir; j++)
+        {
+            if (ft_strncmp(dir_files[j]->d_name, ".", 1) || ft_strncmp(dir_files[j]->d_name, "..", 2))
+                continue;
+            read_files(dir_files[j]->d_name);
+        }
         sort_files(dir_files);
         print_files_std(dir_files);
         free(dir_files);
         closedir(dir);
     }
+    else
+        return ;
 }
 
 void    sort_files(struct dirent **files_array)
@@ -97,6 +107,8 @@ void    ft_free(t_info *ls_info)
 
 int main(int argc, char const *argv[])
 {
+    (void)argv;
+    (void)argc;
     read_files(".");
     return 0;
 }

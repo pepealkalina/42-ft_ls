@@ -6,7 +6,7 @@
 /*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:31 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/02/08 16:59:01 by preina-g         ###   ########.fr       */
+/*   Updated: 2025/02/08 17:47:03 by preina-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int     ft_strlen(const char *string);
     @param ls_info: contains the info of the dir  
     @return Return an int with the amount of files in the dir
 */
-int     dirlen(t_info *ls_info);
+int     dirlen(DIR* dir);
 
 /*
     @brief Swap two elements of an array
@@ -80,6 +80,8 @@ void    ft_swap(void **arr, int i, int j);
     @return Return 1 if s1 is greater than s2, -1 if s1 is less than s2, 0 if both strings are equals
 */
 int	    ft_strncmp(char *s1, char *s2, unsigned int n);
+
+size_t	ft_strlcat(char *dst, const char *src, size_t size);
 
 /*
     === Files Functions ===
