@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:31 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/02/08 17:47:03 by preina-g         ###   ########.fr       */
+/*   Updated: 2025/02/12 12:25:43 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void    sort_files(struct dirent **files_array);
 
     @param ls_info: contains the info of the dir 
 */
-void    read_files();
+void    read_files(char *dir_path);
 
 /*
     @brief Print the files the dir but not print . and ..
@@ -108,5 +108,6 @@ void    read_files();
 */
 void    print_files_std(struct dirent **files_array);
 
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 
 #endif

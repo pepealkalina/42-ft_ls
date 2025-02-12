@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:41 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/02/08 17:52:05 by preina-g         ###   ########.fr       */
+/*   Updated: 2025/02/12 13:32:06 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@ void    read_files(char *dir_path)
 
     if (dir)
     {
+        write(1, "\n", 1);
+        write(1, dir_path, ft_strlen(dir_path));
+        write(1, "\n", 1);
         int len_dir = dirlen(dir);
         dir = opendir(dir_path);
         struct dirent ** dir_files = (struct dirent **)malloc((len_dir + 1) * sizeof(struct dirent *));
@@ -37,14 +40,21 @@ void    read_files(char *dir_path)
             return ;
         for (int i = 0; i < len_dir; i++)
             dir_files[i] = readdir(dir);
-        for (int j = 0; j < len_dir; j++)
-        {
-            if (ft_strncmp(dir_files[j]->d_name, ".", 1) || ft_strncmp(dir_files[j]->d_name, "..", 2))
-                continue;
-            read_files(dir_files[j]->d_name);
-        }
         sort_files(dir_files);
         print_files_std(dir_files);
+        for (int j = 0; j < len_dir; j++)
+        {
+            char route[256] = "\0";
+            if (!ft_strncmp(dir_files[j]->d_name, ".", sizeof(dir_files[j]->d_name)) || !ft_strncmp(dir_files[j]->d_name, "..", sizeof(dir_files[j]->d_name)))
+                continue;
+            ft_strlcat(route, dir_path, 256);
+            ft_strlcat(route, "/", 256);
+            ft_strlcat(route, dir_files[j]->d_name, 256);
+            struct stat dir_info;
+            stat(route, &dir_info);
+            if (S_ISDIR(dir_info.st_mode))
+                read_files(route);
+        }   
         free(dir_files);
         closedir(dir);
     }

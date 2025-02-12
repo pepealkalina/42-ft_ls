@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 13:13:43 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/02/08 17:45:29 by preina-g         ###   ########.fr       */
+/*   Updated: 2025/02/12 12:25:32 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,4 +91,25 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	}
 	dst[len_dst] = '\0';
 	return (res);
+}
+
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+{
+	size_t	i;
+	size_t	len;
+
+	if (dstsize != 0)
+	{
+		len = ft_strlen(src);
+		i = 0;
+		while (i < len && i < (dstsize - 1))
+		{
+			dst[i] = src[i];
+			i++;
+		}
+		dst[i] = '\0';
+	}
+	else
+		len = ft_strlen(src);
+	return (len);
 }
