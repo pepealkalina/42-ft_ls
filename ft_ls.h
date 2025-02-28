@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
+/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:31 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/02/12 12:25:43 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/02/28 17:45:01 by preina-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void    sort_files(struct dirent **files_array);
 
     @param ls_info: contains the info of the dir 
 */
-void    read_files(char *dir_path);
+void    read_files_recursive(char *dir_path);
 
 /*
     @brief Print the files the dir but not print . and ..
