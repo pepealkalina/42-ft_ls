@@ -6,7 +6,7 @@
 /*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:31 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/02/28 17:45:01 by preina-g         ###   ########.fr       */
+/*   Updated: 2025/06/21 12:16:16 by preina-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "42-Ft_printf/includes/ft_printf.h"
 
 # define FLAGS "lRart"
 
@@ -109,5 +110,8 @@ void    read_files_recursive(char *dir_path);
 void    print_files_std(struct dirent **files_array);
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
+void print_large_out(struct stat *s_file_info);
+void ft_putchar(char c);
+
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
+/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:41 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/02/12 13:32:06 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/06/21 12:04:02 by preina-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void    read_files(char *dir_path)
         for (int i = 0; i < len_dir; i++)
             dir_files[i] = readdir(dir);
         sort_files(dir_files);
-        print_files_std(dir_files);
+        // print_files_std(dir_files);
         for (int j = 0; j < len_dir; j++)
         {
             char route[256] = "\0";
@@ -50,10 +50,14 @@ void    read_files(char *dir_path)
             ft_strlcat(route, dir_path, 256);
             ft_strlcat(route, "/", 256);
             ft_strlcat(route, dir_files[j]->d_name, 256);
-            struct stat dir_info;
-            stat(route, &dir_info);
-            if (S_ISDIR(dir_info.st_mode))
-                read_files(route);
+            struct stat s_fd_info;
+            if (lstat(route, &s_fd_info) < 0)
+                return;
+            print_large_out(&s_fd_info);
+            write(1, dir_files[j]->d_name, ft_strlen(dir_files[j]->d_name));
+            write(1, "\n", 1);
+            // if (S_ISDIR(fd_info.st_mode))
+            //     read_files(route);
         }   
         free(dir_files);
         closedir(dir);
