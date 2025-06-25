@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:31 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/06/21 12:16:16 by preina-g         ###   ########.fr       */
+/*   Updated: 2025/06/24 22:47:55 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "42-Ft_printf/includes/ft_printf.h"
+#include "ft_printf/includes/ft_printf.h"
 
 # define FLAGS "lRart"
 
@@ -107,11 +107,15 @@ void    read_files_recursive(char *dir_path);
 
     @param ls_info: contains the info of the dir 
 */
-void    print_files_std(struct dirent **files_array);
+void    print_files_std(struct dirent **files_array, struct stat *s_fd_info, int len_dir);
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
-void print_large_out(struct stat *s_file_info);
+void print_large_out(struct stat *s_file_infos, int max_size_len);
 void ft_putchar(char c);
+int	ft_putnbr(long nb);
+int ft_intlen(long size);
+int get_max_size_len(struct stat *s_fd_info, int len_dir);
+char	**ft_split(char const *s, char c);
 
 
 #endif

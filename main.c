@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:41 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/06/21 12:04:02 by preina-g         ###   ########.fr       */
+/*   Updated: 2025/06/24 22:57:06 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,6 @@ void    read_files(char *dir_path)
 
     if (dir)
     {
-        write(1, "\n", 1);
-        write(1, dir_path, ft_strlen(dir_path));
-        write(1, "\n", 1);
         int len_dir = dirlen(dir);
         dir = opendir(dir_path);
         struct dirent ** dir_files = (struct dirent **)malloc((len_dir + 1) * sizeof(struct dirent *));
@@ -41,7 +38,9 @@ void    read_files(char *dir_path)
         for (int i = 0; i < len_dir; i++)
             dir_files[i] = readdir(dir);
         sort_files(dir_files);
-        // print_files_std(dir_files);
+        struct stat *s_fd_info = (struct stat *)malloc((len_dir + 1) * sizeof(struct stat));
+        if (!s_fd_info)
+            return ;
         for (int j = 0; j < len_dir; j++)
         {
             char route[256] = "\0";
@@ -50,16 +49,15 @@ void    read_files(char *dir_path)
             ft_strlcat(route, dir_path, 256);
             ft_strlcat(route, "/", 256);
             ft_strlcat(route, dir_files[j]->d_name, 256);
-            struct stat s_fd_info;
-            if (lstat(route, &s_fd_info) < 0)
-                return;
-            print_large_out(&s_fd_info);
-            write(1, dir_files[j]->d_name, ft_strlen(dir_files[j]->d_name));
-            write(1, "\n", 1);
-            // if (S_ISDIR(fd_info.st_mode))
+            int err = lstat(route, &s_fd_info[j]);
+            if (err < 0)
+                break;
+                // if (S_ISDIR(fd_info.st_mode))
             //     read_files(route);
-        }   
+        }
+        print_files_std(dir_files, s_fd_info, len_dir);
         free(dir_files);
+        free(s_fd_info);
         closedir(dir);
     }
     else
@@ -84,9 +82,11 @@ void    sort_files(struct dirent **files_array)
     }
 }
 
-void    print_files_std(struct dirent **files_array)
+void    print_files_std(struct dirent **files_array, struct stat *s_fd_info, int len_dir)
 {
     int i = 0;
+
+    int max_size_len = get_max_size_len(s_fd_info, len_dir);
     while (files_array[i])
     {
         if (files_array[i]->d_name[0] == '.')
@@ -94,11 +94,11 @@ void    print_files_std(struct dirent **files_array)
             i++;
             continue;
         }
+        print_large_out(&s_fd_info[i], max_size_len);
         write(1, files_array[i]->d_name, ft_strlen(files_array[i]->d_name));
-        write(1, " ", 1);
+        write(1, "\n", 1);
         i++;
     }
-    write(1, "\n", 1);
 }
 
 //Write the not dir error msg and exits

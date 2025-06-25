@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+         #
+#    By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/08 11:52:09 by pepealkalin       #+#    #+#              #
-#    Updated: 2025/06/21 12:21:42 by preina-g         ###   ########.fr        #
+#    Updated: 2025/06/24 11:24:14 by pepealkalin      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = ft_ls
 
-SRC = main.c utils.c print_large.c 42-Ft_printf/src/ft_printf.c 42-Ft_printf/src/ft_printf_utils.c
+SRC = main.c utils.c print_large.c ft_printf/src/ft_printf.c ft_printf/src/ft_printf_utils.c
 
 OBJECTS = $(SRC:.c=.o)
 
@@ -29,10 +29,10 @@ $(NAME): $(OBJECTS) $(INCLUDE)
 	$(CC) $(CCFLAGS) -c -o $@ $<
 
 clean:
-	rm -rf *.o
+	rm -rf *.o ft_printf/src/ft_printf.o ft_printf/src/ft_printf_utils.o
 
 fclean:
-	rm -rf *.o $(NAME)
+	rm -rf *.o ft_printf/src/ft_printf.o ft_printf/src/ft_printf_utils.o $(NAME)
 
 re:	fclean all
 
