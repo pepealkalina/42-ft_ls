@@ -6,7 +6,7 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 13:13:43 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/06/24 22:48:14 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/17 18:01:41 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,18 +44,30 @@ void    ft_swap(void **arr, int i, int j)
     arr[j] = tmp;
 }
 
+int ft_tolower(int c)
+{
+    if (c >= 'A' && c <= 'Z')
+        return c + ('a' - 'A');
+    return c;
+}
+
 int	ft_strncmp(char *s1, char *s2, unsigned int n)
 {
 	unsigned int	i;
 	i = 0;
-
-	while ((s1[i] || s2[i]) && i < n)
+	unsigned int j = 0;
+	while ((s1[i] || s2[j]) && i < n)
 	{
-		if (s1[i] < s2[i])
+		if (s1[i] == '.' && (s1[i + 1] != '.'))
+			i++;
+		if (s2[j] == '.' && (s2[j + 1] != '.'))
+			j++;
+		if (ft_tolower(s1[i]) < ft_tolower(s2[j]))
 			return (-1);
-		if (s1[i] > s2[i])
+		if (ft_tolower(s1[i]) > ft_tolower(s2[j]))
 			return (1);
 		i++;
+		j++;
 	}
 	return (0);
 }

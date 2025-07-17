@@ -6,7 +6,7 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:02:47 by preina-g          #+#    #+#             */
-/*   Updated: 2025/06/24 23:03:30 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/17 19:24:07 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,12 @@ void print_mode(mode_t st_mode)
 
 void print_size(long size, int max_size_len)
 {
+	int i = 0;
+	if (size == 0)
+		i = 1;
+
 	if (ft_intlen(size) < max_size_len)
 	{
-		int i = 0;
 		while (i++ < (max_size_len - ft_intlen(size)))
 			ft_putchar(' ');
 	}
@@ -50,32 +53,68 @@ void free_doble(void **pointer)
 {
 	int i = 0;
 
+	if (!pointer)
+        return;
+
 	while(pointer[i++])
-		free(pointer[i]);
+		if (pointer[i])
+			free(pointer[i]);
 	
 	free(pointer);
 }
 
-void print_time(char *time)
+int ft_atoi_simple(const char *str)
 {
-	char **splited_str = ft_split(time, ' ');
+    int i = 0;
+    int res = 0;
+
+    while (str[i] >= '0' && str[i] <= '9')
+    {
+        res = res * 10 + (str[i] - '0');
+        i++;
+    }
+    return res;
+}
+
+void print_time(char *mtime)
+{
+	char **splited_str = ft_split(mtime, ' ');
 
 	ft_printf("%s ", splited_str[1]);
-	ft_printf("%s ", splited_str[2]);
+	if (ft_strlen(splited_str[2]) == 1)
+		ft_printf(" %s ", splited_str[2]);
+	else
+		ft_printf("%s ", splited_str[2]);
 
-	char **splited_hour = ft_split(splited_str[3], ':');
-	ft_printf("%s:%s ", splited_hour[0], splited_hour[1]);
 
-	// char **splited_date = ft_split(splited_str[4], '\n');
-	// ft_printf("%s ", splited_date[0]);
+	if (ft_atoi_simple(splited_str[4]) == 2025)
+	{
+		char **splited_hour = ft_split(splited_str[3], ':');
+		ft_printf("%s:", splited_hour[0]);
+		ft_printf("%s ", splited_hour[1]);
+		free_doble((void **)splited_hour);
+	}
+	else
+	{
+		char **splited_date = ft_split(splited_str[4], '\n');
+		ft_printf("%s  ", splited_date[0]);
+		free_doble((void **)splited_date);
+	}
 
-	free_doble((void **)splited_hour);
 	free_doble((void **)splited_str);
-	// free_doble((void **)splited_date);
 }
 
 
-void print_large_out(struct stat *s_file_info, int max_size_len)
+int get_major(dev_t dev) {
+    return (int)((dev >> 8) & 0xFFF);
+}
+
+// Versión funcional de minor()
+int get_minor(dev_t dev) {
+    return (int)((dev & 0xFF) | ((dev >> 12) & 0xFFF00));
+}
+
+void print_large_out(struct stat *s_file_info)
 {
 	struct passwd *s_passwd = getpwuid(s_file_info->st_uid);
 	struct group *s_group = getgrgid(s_file_info->st_gid);
@@ -83,9 +122,16 @@ void print_large_out(struct stat *s_file_info, int max_size_len)
 
     print_mode(s_file_info->st_mode);
 	ft_putchar(' ');
-	ft_putnbr(s_file_info->st_nlink);
-	ft_printf(" %s %s ", s_passwd->pw_name, s_group->gr_name);
-	print_size(s_file_info->st_size, max_size_len);
+	print_size(s_file_info->st_nlink, 2);
+	ft_printf(" %s %s\t", s_passwd->pw_name, s_group->gr_name);
+	if (S_ISCHR(s_file_info->st_mode) || S_ISBLK(s_file_info->st_mode))
+	{
+		print_size(get_major(s_file_info->st_rdev), 3);
+		write(1, ", ", 2);
+		print_size(get_minor(s_file_info->st_rdev), 3);
+	}
+	else
+		print_size(s_file_info->st_size, 8);
 	ft_putchar(' ');
 	print_time(ctime(&s_file_info->st_mtime));
 }

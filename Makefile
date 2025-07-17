@@ -6,7 +6,7 @@
 #    By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/08 11:52:09 by pepealkalin       #+#    #+#              #
-#    Updated: 2025/06/24 11:24:14 by pepealkalin      ###   ########.fr        #
+#    Updated: 2025/07/10 13:54:25 by pepealkalin      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,9 +21,10 @@ CC = gcc
 CCFLAGS = -Wall -Wextra -Werror -g
 
 all: $(NAME)
+	
 
 $(NAME): $(OBJECTS) $(INCLUDE)
-	$(CC) $(CCFLAGS) $(OBJECTS) -o $(NAME)
+	$(CC) $(CCFLAGS) $(OBJECTS) -o $(NAME) 
 
 %.o: %.c
 	$(CC) $(CCFLAGS) -c -o $@ $<

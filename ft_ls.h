@@ -6,7 +6,7 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:31 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/06/24 22:47:55 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/17 19:00:17 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,15 @@ typedef struct s_info
     DIR             *dir;
     struct dirent   **files_array;
 }t_info;
+
+typedef struct s_flags
+{
+    int    flag_l;
+    int    flag_R;
+    int    flag_r;
+    int    flag_t;
+    int    flag_a;
+}t_flags;
 
 /*
     === Utils Functions ===
@@ -95,6 +104,8 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size);
 */
 void    sort_files(struct dirent **files_array);
 
+void    sort_files_reverse(struct dirent **files_array);
+
 /*
     @brief read the files in a dir an saves them in ls_info->files_array
 
@@ -107,15 +118,20 @@ void    read_files_recursive(char *dir_path);
 
     @param ls_info: contains the info of the dir 
 */
-void    print_files_std(struct dirent **files_array, struct stat *s_fd_info, int len_dir);
+void    print_files_std(struct dirent **files_array, struct stat *s_fd_info, char **routes, t_flags *flags, int count);
+
+void    sort_files_time(struct stat *s_fd_info, struct dirent **files_array);
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
-void print_large_out(struct stat *s_file_infos, int max_size_len);
+void print_large_out(struct stat *s_file_infos);
 void ft_putchar(char c);
 int	ft_putnbr(long nb);
 int ft_intlen(long size);
 int get_max_size_len(struct stat *s_fd_info, int len_dir);
 char	**ft_split(char const *s, char c);
+
+void free_doble(void **pointer);
+void ft_not_dir_error(const char *dir);
 
 
 #endif
