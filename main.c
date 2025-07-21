@@ -6,7 +6,7 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:41 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/07/22 01:27:32 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/22 01:28:58 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,7 +298,6 @@ void parse_flags(int argc, const char **argv, t_flags *flags)
     
     int col_len = get_max_str_len(fds);
     int found_regfile = 0;
-    int len_fds;
     for(i = 0; fds[i]; i++)
     {
         //mira si es un fichero
@@ -322,7 +321,6 @@ void parse_flags(int argc, const char **argv, t_flags *flags)
             }
         }
     }
-    len_fds = i;
     if (flags->flag_l != 1)
         ft_putchar('\n');   
     for(i = 0; fds[i]; i++)
