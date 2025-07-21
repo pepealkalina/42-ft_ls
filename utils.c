@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 13:13:43 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/07/21 12:20:14 by preina-g         ###   ########.fr       */
+/*   Updated: 2025/07/22 00:23:49 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,19 +156,6 @@ int get_max_size_len(struct stat *s_fd_info, int len_dir)
 	return (max);
 }
 
-int get_max_name_len(struct dirent **files_array, int len_dir)
-{
-	int max = 0;
-	int i = 0;
-	while (i < len_dir)
-	{
-		if (max < ft_strlen(files_array[i]->d_name))
-			max = ft_strlen(files_array[i]->d_name);
-		i++;
-	}
-	return (max);
-}
-
 static size_t	ft_words_count(const char *s, char c)
 {
 	int	i;
@@ -207,7 +194,52 @@ static size_t	ft_wordlen(const char *str, char c, int i)
 	return (len);
 }
 
-char	**ft_free(const char **str, size_t i)
+int get_max_name_len(struct dirent **files_array, int len_dir)
+{
+	int max = 0;
+	int i = 0;
+	while (i < len_dir)
+	{
+		if (max < ft_strlen(files_array[i]->d_name))
+			max = ft_strlen(files_array[i]->d_name);
+		i++;
+	}
+	return (max);
+}
+
+int get_max_str_len(char **files_array)
+{
+	int max = 0;
+	int i = 0;
+	while (files_array[i])
+	{
+		if (max < ft_strlen(files_array[i]))
+			max = ft_strlen(files_array[i]);
+		i++;
+	}
+	return (max);
+}
+
+char	*ft_strdup(const char *s)
+{
+	char	*array;
+	size_t	size;
+	size_t	i;
+
+	i = 0;
+	size = ft_strlen(s);
+	array = (char *)malloc(sizeof(char) * (size + 1));
+	if (array == NULL)
+		return (NULL);
+	while (i < size + 1)
+	{
+		array[i] = s[i];
+		i++;
+	}
+	return (array);
+}
+
+static char	**ft_free(const char **str, size_t i)
 {
 	while ((int)i < 0)
 	{

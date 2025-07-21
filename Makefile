@@ -6,13 +6,13 @@
 #    By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/08 11:52:09 by pepealkalin       #+#    #+#              #
-#    Updated: 2025/07/10 13:54:25 by pepealkalin      ###   ########.fr        #
+#    Updated: 2025/07/21 23:45:08 by pepealkalin      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = ft_ls
 
-SRC = main.c utils.c print_large.c ft_printf/src/ft_printf.c ft_printf/src/ft_printf_utils.c
+SRC = main.c utils.c print_large.c ft_printf/src/ft_printf.c ft_printf/src/ft_printf_utils.c sort.c
 
 OBJECTS = $(SRC:.c=.o)
 

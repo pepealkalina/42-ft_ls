@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:41 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/07/21 12:55:43 by preina-g         ###   ########.fr       */
+/*   Updated: 2025/07/22 01:05:31 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,18 +92,21 @@ void    read_files(char *dir_path, t_flags *flags)
         }
         dir_files[j] = NULL;
         routes[j] = NULL;
+        if (flags->flag_l == 1)
+        {
+            int total_blocks = 0;
+            for(int i = 0; i < len_dir; i++)
+                total_blocks += s_fd_info[i].st_blocks;
+            
+            ft_printf("total ");
+            ft_putnbr(total_blocks);
+            ft_putchar('\n');
+        }
         if (flags->flag_R == 1)
             ft_printf("\n%s:\n", dir_path);
         
-        if (flags->flag_t == 1 && flags->flag_r == 1)
-            sort_files_time_reverse(s_fd_info, dir_files, routes);
-        else if (flags->flag_t == 1)
-            sort_files_time(s_fd_info, dir_files, routes);
-        else if (flags->flag_r == 1)
-            sort_files_reverse(dir_files, s_fd_info, routes);
-        else
-            sort_files(dir_files, s_fd_info, routes);
-        
+        sort_in_dir(dir_files, s_fd_info, routes, flags);
+
         print_files_std(dir_files, s_fd_info, routes, flags, j);
 
         if (flags->flag_R == 1)
@@ -131,101 +134,6 @@ void    read_files(char *dir_path, t_flags *flags)
     }
     else
         return ;
-}
-
-
-
-void    sort_files(struct dirent **files_array, struct stat *s_fd_info, char **routes)
-{
-    (void)s_fd_info;
-    int i = 0;
-    while (files_array[i])
-    {
-        int j = 0;
-        while (files_array[j])
-        {
-            if (ft_strncmp(files_array[i]->d_name, \
-            files_array[j]->d_name, \
-            ft_strlen(files_array[j]->d_name)) == -1)
-            {
-                ft_swap((void **)files_array, i, j);
-                ft_swap((void **)routes, i, j);
-                struct stat tmp = s_fd_info[i];
-                s_fd_info[i] = s_fd_info[j];
-                s_fd_info[j] = tmp;
-            }
-            j++;
-        }
-        i++;
-    }
-}
-
-void    sort_files_reverse(struct dirent **files_array, struct stat *s_fd_info, char **routes)
-{
-    int i = 0;
-    while (files_array[i])
-    {
-        int j = 0;
-        while (files_array[j])
-        {
-            if (ft_strncmp(files_array[i]->d_name, \
-            files_array[j]->d_name, \
-            ft_strlen(files_array[j]->d_name)) == 1)
-            {
-                ft_swap((void **)files_array, i, j);
-                ft_swap((void **)routes, i, j);
-                struct stat tmp = s_fd_info[i];
-                s_fd_info[i] = s_fd_info[j];
-                s_fd_info[j] = tmp;
-            }
-            j++;
-        }
-        i++;
-    }
-}
-
-void    sort_files_time(struct stat *s_fd_info, struct dirent **files_array, char **routes)
-{
-    int i = 0;
-    while (files_array[i])
-    {
-        int j = 0;
-        while (files_array[j])
-        {
-            if (s_fd_info[i].st_mtime < s_fd_info[j].st_mtime)
-            {
-                ft_swap((void **)files_array, i, j);
-                ft_swap((void **)routes, i, j);
-                struct stat tmp = s_fd_info[i];
-                s_fd_info[i] = s_fd_info[j];
-                s_fd_info[j] = tmp;
-            }
-            j++;
-        }
-        i++;
-    }
-}
-
-void    sort_files_time_reverse(struct stat *s_fd_info, struct dirent **files_array, char **routes)
-{
-    int i = 0;
-    while (files_array[i])
-    {
-        int j = 0;
-        while (files_array[j])
-        {
-            if (s_fd_info[i].st_mtime > s_fd_info[j].st_mtime)
-            {
-                ft_swap((void **)files_array, i, j);
-                ft_swap((void **)routes, i, j);
-                struct stat tmp = s_fd_info[i];
-                s_fd_info[i] = s_fd_info[j];
-                s_fd_info[j] = tmp;
-            }
-            j++;
-        }
-        i++;
-    }
 }
 
 void print_slink(struct stat *s_fd_info, char **routes, int i)
@@ -279,10 +187,74 @@ void ft_invalid_flag_error(char arg)
     exit(1);
 }
 
+char **save_fds(int argc, char const **argv, int start_index)
+{
+    if (start_index >= argc)
+        return (NULL);
+
+    int count = argc - start_index;
+    char **args_copy = (char **)malloc((count + 1) * sizeof(char *));
+    if (!args_copy)
+        return (NULL);
+
+    for (int i = 0; i < count; i++)
+    {
+        args_copy[i] = ft_strdup(argv[start_index + i]);
+        if (!args_copy[i])
+        {
+            // Si falla malloc, libera lo anterior
+            for (int j = 0; j < i; j++)
+                free(args_copy[j]);
+            free(args_copy);
+            return (NULL);
+        }
+    }
+    args_copy[count] = (NULL);
+    return (args_copy);
+}
+
+int check_file_type(char *path)
+{
+    struct stat path_stat;
+
+    if (lstat(path, &path_stat) == -1)
+        return -1;
+    if (S_ISDIR(path_stat.st_mode))
+        return 0;
+    if (S_ISREG(path_stat.st_mode))
+        return 1;
+    return -1;
+}
+
+void check_files_errors(char **fds)
+{
+    for (int i = 0; fds[i]; i++)
+    {
+        struct stat path_stat;
+        if (lstat(fds[i], &path_stat) == -1)
+            perror(fds[i]);
+    }
+}
+
+void get_arg_cols(char **fds, t_flags *flag, int len)
+{
+    struct stat *path_stat = (struct stat *)malloc(len * sizeof(struct stat));;
+    for (int i = 0; i < len; i++)
+    {
+        if (lstat(fds[i], &path_stat[i]) == -1)
+        {
+            break;
+        }
+    }
+    get_name_group_col(path_stat, flag, len);
+    free(path_stat);
+}
+
 
 void parse_flags(int argc, const char **argv, t_flags *flags) 
-{
-    for (int i = 1; i < argc; i++) 
+{   
+    int i;
+    for (i = 1; i < argc; i++) 
     {
         // Solo procesar argumentos que empiezan con '-'
         if (argv[i][0] == '-') {
@@ -306,12 +278,68 @@ void parse_flags(int argc, const char **argv, t_flags *flags)
             }
         }
         else
+            break;
+    }
+    if (argc == 1)
+    {
+        read_files(".", flags);
+        return;
+    }
+    int start = i;
+    char **fds = save_fds(argc, argv, start);
+    if (!fds)
+        return;
+    //sort args
+    sort_in_arg(fds, flags);
+    // check if there are erroneous files
+    check_files_errors(fds);
+    //get for -l
+    get_arg_cols(fds, flags, (argc - start));
+    
+    int col_len = get_max_str_len(fds);
+    int found_regfile = 0;
+    for(i = 0; fds[i]; i++)
+    {
+        //mira si es un fichero
+        if (check_file_type(fds[i]) == 1)
         {
-            read_files((char *)argv[i], flags);
+            found_regfile++;
+            //mira si la flag l esta para imprimirlo en large
+            if (flags->flag_l == 1)
+            {
+                struct stat path_stat;
+                if (lstat(fds[i], &path_stat) == -1)
+                    continue;
+                print_large_out(&path_stat, flags);
+                ft_putchar(' ');
+                ft_printf("%s\n", fds[i]);
+            }
+            else
+            {
+                print_column(fds[i], col_len);
+                ft_putchar(' ');
+            }
         }
     }
-    if (argv[argc - 1][0] == '-')
-        read_files(".", flags);
+    if (flags->flag_l != 1)
+        ft_putchar('\n');   
+    for(i = 0; fds[i]; i++)
+    {
+        //mira si es un fichero
+        if (check_file_type(fds[i]) == 0 && !(argc <= start))
+        {
+            if (found_regfile == 0)
+            {
+                ft_printf("%s:\n", fds[i]);
+                found_regfile = 1;
+            }
+            else
+                ft_printf("\n%s:\n", fds[i]);
+            read_files(fds[i], flags);
+        }
+        else if(check_file_type(fds[i]) == 0)
+            read_files(fds[i], flags);
+    }
 }
 
 
@@ -319,6 +347,11 @@ int main(int argc, char const *argv[])
 {
     t_flags flags;
 
+    flags.flag_a = 1;
+    flags.flag_l = 1;
+    flags.flag_r = 1;
+    flags.flag_R = 1;
+    flags.flag_t = 1;
     // if there no parametres executes ls in current directory that is .
     if (argc == 1)
         read_files(".", &flags);
