@@ -6,7 +6,7 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:31 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/07/17 19:00:17 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/21 04:15:18 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,8 @@ void    read_files_recursive(char *dir_path);
 void    print_files_std(struct dirent **files_array, struct stat *s_fd_info, char **routes, t_flags *flags, int count);
 
 void    sort_files_time(struct stat *s_fd_info, struct dirent **files_array);
+void    sort_files_time_reverse(struct stat *s_fd_info, struct dirent **files_array);
+
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 void print_large_out(struct stat *s_file_infos);
@@ -130,7 +132,7 @@ int ft_intlen(long size);
 int get_max_size_len(struct stat *s_fd_info, int len_dir);
 char	**ft_split(char const *s, char c);
 
-void free_doble(void **pointer);
+void free_doble(char **pointer);
 void ft_not_dir_error(const char *dir);
 
 

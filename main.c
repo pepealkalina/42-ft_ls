@@ -6,7 +6,7 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:41 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/07/17 19:43:15 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/21 04:19:26 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,7 @@ void    read_files(char *dir_path, t_flags *flags)
             if ((!ft_strncmp(file->d_name, ".", 1) 
             || !ft_strncmp(file->d_name, "..", 2)
             || file->d_name[0] == '.') && flags->flag_a != 1)
-            {
-                j++;
                 continue;
-            }
             dir_files[j] = file;
             
             routes[j] = (char *)malloc(256 * sizeof(char));
@@ -94,7 +91,16 @@ void    read_files(char *dir_path, t_flags *flags)
         routes[j] = NULL;
         if (flags->flag_R == 1)
             ft_printf("\n%s:\n", dir_path);
-        sort_files(dir_files);
+        
+        if (flags->flag_t == 1 && flags->flag_r == 1)
+            sort_files_time_reverse(s_fd_info, dir_files);
+        else if (flags->flag_t == 1)
+            sort_files_time(s_fd_info, dir_files);
+        else if (flags->flag_r == 1)
+            sort_files_reverse(dir_files);
+        else
+            sort_files(dir_files);
+        
         print_files_std(dir_files, s_fd_info, routes, flags, j);
 
         if (flags->flag_R == 1)
@@ -174,6 +180,27 @@ void    sort_files_time(struct stat *s_fd_info, struct dirent **files_array)
         while (files_array[j])
         {
             if (s_fd_info[i].st_mtime < s_fd_info[j].st_mtime)
+            {
+                ft_swap((void **)files_array, i, j);
+                struct stat tmp = s_fd_info[i];
+                s_fd_info[i] = s_fd_info[j];
+                s_fd_info[j] = tmp;
+            }
+            j++;
+        }
+        i++;
+    }
+}
+
+void    sort_files_time_reverse(struct stat *s_fd_info, struct dirent **files_array)
+{
+    int i = 0;
+    while (files_array[i])
+    {
+        int j = 0;
+        while (files_array[j])
+        {
+            if (s_fd_info[i].st_mtime > s_fd_info[j].st_mtime)
             {
                 ft_swap((void **)files_array, i, j);
                 struct stat tmp = s_fd_info[i];

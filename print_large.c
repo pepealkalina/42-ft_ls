@@ -6,7 +6,7 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:02:47 by preina-g          #+#    #+#             */
-/*   Updated: 2025/07/17 19:24:07 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/21 04:09:09 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void print_size(long size, int max_size_len)
 	ft_putnbr(size);
 }
 
-void free_doble(void **pointer)
+void free_doble(char **pointer)
 {
 	int i = 0;
 
@@ -59,7 +59,6 @@ void free_doble(void **pointer)
 	while(pointer[i++])
 		if (pointer[i])
 			free(pointer[i]);
-	
 	free(pointer);
 }
 
@@ -92,16 +91,22 @@ void print_time(char *mtime)
 		char **splited_hour = ft_split(splited_str[3], ':');
 		ft_printf("%s:", splited_hour[0]);
 		ft_printf("%s ", splited_hour[1]);
-		free_doble((void **)splited_hour);
+		free(splited_hour[0]);
+		free(splited_hour[1]);
+		free(splited_hour[2]);
+		free(splited_hour);
 	}
 	else
 	{
-		char **splited_date = ft_split(splited_str[4], '\n');
-		ft_printf("%s  ", splited_date[0]);
-		free_doble((void **)splited_date);
+		splited_str[4][ft_strlen(splited_str[4]) - 1] = '\0';
+		ft_printf("%s  ", splited_str[4]);
 	}
-
-	free_doble((void **)splited_str);
+	free(splited_str[4]);
+	free(splited_str[3]);
+	free(splited_str[2]);
+	free(splited_str[1]);
+	free(splited_str[0]);
+	free(splited_str);
 }
 
 

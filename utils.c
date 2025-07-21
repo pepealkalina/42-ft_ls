@@ -6,7 +6,7 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 13:13:43 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/07/17 18:01:41 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/21 04:07:36 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,7 @@ static size_t	ft_wordlen(const char *str, char c, int i)
 	return (len);
 }
 
-static char	**ft_free(const char **str, size_t i)
+char	**ft_free(const char **str, size_t i)
 {
 	while ((int)i < 0)
 	{
@@ -219,7 +219,7 @@ static char	**ft_make_split(char **str, const char *s, char c, size_t l)
 		while (s[i] == c)
 			i++;
 		str[j] = (char *)malloc(sizeof(char) * (ft_wordlen(s, c, i) + 1));
-		while (!str[j])
+		if (!str[j])
 			return (ft_free((const char **)str, j));
 		while (s[i] && s[i] != c)
 			str[j][k++] = s[i++];
