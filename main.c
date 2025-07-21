@@ -6,7 +6,7 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:41 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/07/22 01:18:23 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/22 01:20:58 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,6 +298,7 @@ void parse_flags(int argc, const char **argv, t_flags *flags)
     
     int col_len = get_max_str_len(fds);
     int found_regfile = 0;
+    int len_fds;
     for(i = 0; fds[i]; i++)
     {
         //mira si es un fichero
@@ -321,6 +322,7 @@ void parse_flags(int argc, const char **argv, t_flags *flags)
             }
         }
     }
+    len_fds = i;
     if (flags->flag_l != 1)
         ft_putchar('\n');   
     for(i = 0; fds[i]; i++)
@@ -340,7 +342,7 @@ void parse_flags(int argc, const char **argv, t_flags *flags)
         else if(check_file_type(fds[i]) == 0)
             read_files(fds[i], flags);
     }
-    ft_free((const char **)fds, argc - start);
+    ft_free((const char **)fds, len_fds);
 }
 
 
@@ -357,8 +359,6 @@ int main(int argc, char const *argv[])
     if (argc == 1)
         read_files(".", &flags);
     else if (argc > 1)
-    {
         parse_flags(argc, argv, &flags);
-    }
     return 0;
 }
