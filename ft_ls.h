@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
+/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:31 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/07/21 04:15:18 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/21 12:20:26 by preina-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,13 @@ typedef struct s_info
 
 typedef struct s_flags
 {
-    int    flag_l;
-    int    flag_R;
-    int    flag_r;
-    int    flag_t;
-    int    flag_a;
+    int     flag_l;
+    int     flag_R;
+    int     flag_r;
+    int     flag_t;
+    int     flag_a;
+    int     name_col;
+    int     gr_col;
 }t_flags;
 
 /*
@@ -102,9 +104,9 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size);
 
     @param ls_info: contains the info of the dir 
 */
-void    sort_files(struct dirent **files_array);
+void    sort_files(struct dirent **files_array, struct stat *s_fd_info, char **routes);
 
-void    sort_files_reverse(struct dirent **files_array);
+void    sort_files_reverse(struct dirent **files_array, struct stat *s_fd_info, char **routes);
 
 /*
     @brief read the files in a dir an saves them in ls_info->files_array
@@ -120,20 +122,24 @@ void    read_files_recursive(char *dir_path);
 */
 void    print_files_std(struct dirent **files_array, struct stat *s_fd_info, char **routes, t_flags *flags, int count);
 
-void    sort_files_time(struct stat *s_fd_info, struct dirent **files_array);
-void    sort_files_time_reverse(struct stat *s_fd_info, struct dirent **files_array);
+void    sort_files_time(struct stat *s_fd_info, struct dirent **files_array, char **routes);
+void    sort_files_time_reverse(struct stat *s_fd_info, struct dirent **files_array, char **routes);
 
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
-void print_large_out(struct stat *s_file_infos);
+void print_large_out(struct stat *s_file_infos,t_flags *col_size);
 void ft_putchar(char c);
 int	ft_putnbr(long nb);
 int ft_intlen(long size);
 int get_max_size_len(struct stat *s_fd_info, int len_dir);
+int get_max_name_len(struct dirent **files_array, int len_dir);
 char	**ft_split(char const *s, char c);
 
 void free_doble(char **pointer);
 void ft_not_dir_error(const char *dir);
+
+void get_name_group_col(struct stat *s_file_info, t_flags *col_size, int len);
+void print_column(char *str, int max_size_len);
 
 
 #endif

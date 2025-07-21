@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
+/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:41 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/07/21 04:19:26 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/21 12:55:43 by preina-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,13 @@ DIR *parse_dir(char const *dir)
 {
     // check if the first argument is a flag
     DIR *is_dir = opendir(dir);
-    if (!dir)
+    if (!dir)  
         return (0);
     else if (!is_dir)
+    {
+        perror(dir);
         return (0);
+    }
     return (is_dir);
 }
 
@@ -28,13 +31,13 @@ void build_path(char *buffer, size_t buffer_size, const char *base, const char *
 {
     buffer[0] = '\0'; // Inicializa a cadena vacía
 
-    strncat(buffer, base, buffer_size - 1);
+    ft_strlcat(buffer, base, buffer_size - 1);
 
     // Asegura que haya una '/' si no está ya al final
     if (buffer[strlen(buffer) - 1] != '/')
-        strncat(buffer, "/", buffer_size - strlen(buffer) - 1);
+        ft_strlcat(buffer, "/", buffer_size - strlen(buffer) - 1);
 
-    strncat(buffer, file, buffer_size - strlen(buffer) - 1);
+    ft_strlcat(buffer, file, buffer_size - strlen(buffer) - 1);
 }
 
 void    read_files(char *dir_path, t_flags *flags)
@@ -64,7 +67,7 @@ void    read_files(char *dir_path, t_flags *flags)
             || file->d_name[0] == '.') && flags->flag_a != 1)
                 continue;
             dir_files[j] = file;
-            
+
             routes[j] = (char *)malloc(256 * sizeof(char));
             if (!routes[j])
             {
@@ -93,13 +96,13 @@ void    read_files(char *dir_path, t_flags *flags)
             ft_printf("\n%s:\n", dir_path);
         
         if (flags->flag_t == 1 && flags->flag_r == 1)
-            sort_files_time_reverse(s_fd_info, dir_files);
+            sort_files_time_reverse(s_fd_info, dir_files, routes);
         else if (flags->flag_t == 1)
-            sort_files_time(s_fd_info, dir_files);
+            sort_files_time(s_fd_info, dir_files, routes);
         else if (flags->flag_r == 1)
-            sort_files_reverse(dir_files);
+            sort_files_reverse(dir_files, s_fd_info, routes);
         else
-            sort_files(dir_files);
+            sort_files(dir_files, s_fd_info, routes);
         
         print_files_std(dir_files, s_fd_info, routes, flags, j);
 
@@ -127,16 +130,14 @@ void    read_files(char *dir_path, t_flags *flags)
         closedir(dir);
     }
     else
-    {
-        ft_not_dir_error((const char *)dir_path);
         return ;
-    }
 }
 
 
 
-void    sort_files(struct dirent **files_array)
+void    sort_files(struct dirent **files_array, struct stat *s_fd_info, char **routes)
 {
+    (void)s_fd_info;
     int i = 0;
     while (files_array[i])
     {
@@ -146,14 +147,20 @@ void    sort_files(struct dirent **files_array)
             if (ft_strncmp(files_array[i]->d_name, \
             files_array[j]->d_name, \
             ft_strlen(files_array[j]->d_name)) == -1)
+            {
                 ft_swap((void **)files_array, i, j);
+                ft_swap((void **)routes, i, j);
+                struct stat tmp = s_fd_info[i];
+                s_fd_info[i] = s_fd_info[j];
+                s_fd_info[j] = tmp;
+            }
             j++;
         }
         i++;
     }
 }
 
-void    sort_files_reverse(struct dirent **files_array)
+void    sort_files_reverse(struct dirent **files_array, struct stat *s_fd_info, char **routes)
 {
     int i = 0;
     while (files_array[i])
@@ -164,14 +171,20 @@ void    sort_files_reverse(struct dirent **files_array)
             if (ft_strncmp(files_array[i]->d_name, \
             files_array[j]->d_name, \
             ft_strlen(files_array[j]->d_name)) == 1)
+            {
                 ft_swap((void **)files_array, i, j);
+                ft_swap((void **)routes, i, j);
+                struct stat tmp = s_fd_info[i];
+                s_fd_info[i] = s_fd_info[j];
+                s_fd_info[j] = tmp;
+            }
             j++;
         }
         i++;
     }
 }
 
-void    sort_files_time(struct stat *s_fd_info, struct dirent **files_array)
+void    sort_files_time(struct stat *s_fd_info, struct dirent **files_array, char **routes)
 {
     int i = 0;
     while (files_array[i])
@@ -182,6 +195,7 @@ void    sort_files_time(struct stat *s_fd_info, struct dirent **files_array)
             if (s_fd_info[i].st_mtime < s_fd_info[j].st_mtime)
             {
                 ft_swap((void **)files_array, i, j);
+                ft_swap((void **)routes, i, j);
                 struct stat tmp = s_fd_info[i];
                 s_fd_info[i] = s_fd_info[j];
                 s_fd_info[j] = tmp;
@@ -192,7 +206,7 @@ void    sort_files_time(struct stat *s_fd_info, struct dirent **files_array)
     }
 }
 
-void    sort_files_time_reverse(struct stat *s_fd_info, struct dirent **files_array)
+void    sort_files_time_reverse(struct stat *s_fd_info, struct dirent **files_array, char **routes)
 {
     int i = 0;
     while (files_array[i])
@@ -203,6 +217,7 @@ void    sort_files_time_reverse(struct stat *s_fd_info, struct dirent **files_ar
             if (s_fd_info[i].st_mtime > s_fd_info[j].st_mtime)
             {
                 ft_swap((void **)files_array, i, j);
+                ft_swap((void **)routes, i, j);
                 struct stat tmp = s_fd_info[i];
                 s_fd_info[i] = s_fd_info[j];
                 s_fd_info[j] = tmp;
@@ -213,36 +228,41 @@ void    sort_files_time_reverse(struct stat *s_fd_info, struct dirent **files_ar
     }
 }
 
+void print_slink(struct stat *s_fd_info, char **routes, int i)
+{
+    if (S_ISLNK(s_fd_info[i].st_mode))
+    {
+        char fd_target[PATH_MAX];
+        ssize_t len = readlink(routes[i], fd_target, sizeof(fd_target) - 1);
+        if (len == -1) 
+        {
+            perror("readlink");
+            return;
+        }
+        fd_target[len] = '\0';
+        ft_printf(" -> %s", fd_target);
+    }
+}
+
 void    print_files_std(struct dirent **files_array, struct stat *s_fd_info, char **routes, t_flags *flags, int count)
 {   
+    int col_size = get_max_name_len(files_array, count);
+
     for (int i = 0; i < count; i++)
     {
         if (files_array[i]->d_name[0] == '.' && flags->flag_a != 1)
-        {
-            i++;
-            continue;
-        }
+        continue;
         if (flags->flag_l == 1)
         {
-            print_large_out(&s_fd_info[i]);
+            get_name_group_col(s_fd_info, flags, count);
+            print_large_out(&s_fd_info[i], flags);
             ft_printf("%s", files_array[i]->d_name);
-            if (S_ISLNK(s_fd_info[i].st_mode))
-            {
-                char fd_target[PATH_MAX];
-                ssize_t len = readlink(routes[i], fd_target, sizeof(fd_target) - 1);
-                if (len == -1) 
-                {
-                    perror("readlink");
-                    return;
-                }
-                fd_target[len] = '\0';
-                ft_printf(" -> %s", fd_target);
-            }
+            print_slink(s_fd_info, routes, i);
             write(1, "\n", 1);
         }
         else
         {
-            write(1, files_array[i]->d_name, ft_strlen(files_array[i]->d_name));
+            print_column(files_array[i]->d_name, col_size);
             write(1, " ", 1);
         }
     }
@@ -255,16 +275,6 @@ void ft_invalid_flag_error(char arg)
     write(2, "Error: ", 7);
     write(2, &arg, 1);
     write(2, ": invalid option\n", 18);
-
-    exit(1);
-}
-//Write the not dir error msg and exits
-void ft_not_dir_error(const char *dir)
-{
-    // Write in stderr Error: <dir>: dir not found
-    write(2, "Error: ", 7);
-    write(2, dir, ft_strlen(dir));
-    write(2, ": dir not found\n", 16);
 
     exit(1);
 }
@@ -291,7 +301,7 @@ void parse_flags(int argc, const char **argv, t_flags *flags)
                 else
                 {
                     ft_invalid_flag_error(argv[i][j]);
-                    return;
+                    exit(EXIT_FAILURE);
                 }   
             }
         }

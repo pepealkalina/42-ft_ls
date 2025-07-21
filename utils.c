@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
+/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 13:13:43 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/07/21 04:07:36 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/21 12:20:14 by preina-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,19 @@ int get_max_size_len(struct stat *s_fd_info, int len_dir)
 	{
 		if (max < ft_intlen(s_fd_info[i].st_size))
 			max = ft_intlen(s_fd_info[i].st_size);
+		i++;
+	}
+	return (max);
+}
+
+int get_max_name_len(struct dirent **files_array, int len_dir)
+{
+	int max = 0;
+	int i = 0;
+	while (i < len_dir)
+	{
+		if (max < ft_strlen(files_array[i]->d_name))
+			max = ft_strlen(files_array[i]->d_name);
 		i++;
 	}
 	return (max);
