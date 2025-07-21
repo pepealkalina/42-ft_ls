@@ -6,7 +6,7 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:41 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/07/22 01:30:59 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/22 01:32:12 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -347,12 +347,6 @@ void parse_flags(int argc, const char **argv, t_flags *flags)
 int main(int argc, char const *argv[])
 {
     t_flags flags;
-
-    flags.flag_a = 1;
-    flags.flag_l = 1;
-    flags.flag_r = 1;
-    flags.flag_R = 1;
-    flags.flag_t = 1;
     // if there no parametres executes ls in current directory that is .
     if (argc == 1)
         read_files(".", &flags);
