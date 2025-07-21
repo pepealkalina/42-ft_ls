@@ -6,7 +6,7 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 13:13:43 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/07/22 01:18:25 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/22 01:23:33 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,7 +231,7 @@ char	*ft_strdup(const char *s)
 	array = (char *)malloc(sizeof(char) * (size + 1));
 	if (array == NULL)
 		return (NULL);
-	while (i < size + 1)
+	while (i < size)
 	{
 		array[i] = s[i];
 		i++;
