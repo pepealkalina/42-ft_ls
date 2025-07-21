@@ -6,7 +6,7 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:31 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/07/22 01:15:13 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/22 01:18:22 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ char    *ft_strdup(const char *s1);
 void sort_in_dir(struct dirent **dir_files, struct stat *s_fd_info, char **routes, t_flags *flags);
 int get_max_str_len(char **files_array);
 void sort_in_arg(char **files_array, t_flags *flags);
-static char	**ft_free(const char **str, size_t i);
+char	**ft_free(const char **str, size_t i);
 
 
 

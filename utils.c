@@ -6,7 +6,7 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 13:13:43 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/07/22 00:23:49 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/22 01:18:25 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,7 +239,7 @@ char	*ft_strdup(const char *s)
 	return (array);
 }
 
-static char	**ft_free(const char **str, size_t i)
+char	**ft_free(const char **str, size_t i)
 {
 	while ((int)i < 0)
 	{

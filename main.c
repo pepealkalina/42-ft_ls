@@ -6,7 +6,7 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:41 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/07/22 01:15:35 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/22 01:18:23 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -340,7 +340,7 @@ void parse_flags(int argc, const char **argv, t_flags *flags)
         else if(check_file_type(fds[i]) == 0)
             read_files(fds[i], flags);
     }
-    ft_free(fds, argc - start);
+    ft_free((const char **)fds, argc - start);
 }
 
 
