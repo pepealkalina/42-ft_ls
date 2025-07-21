@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_large.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: preina-g <preina-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:02:47 by preina-g          #+#    #+#             */
-/*   Updated: 2025/07/21 12:55:10 by preina-g         ###   ########.fr       */
+/*   Updated: 2025/07/22 01:27:59 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,15 +65,11 @@ void print_column(char *str, int max_size_len)
 
 void free_doble(char **pointer)
 {
-	int i = 0;
-
 	if (!pointer)
         return;
-
-	while(pointer[i++])
-		if (pointer[i])
-			free(pointer[i]);
-	free(pointer);
+    for (int i = 0; pointer[i]; i++)
+        free(pointer[i]);
+    free(pointer);
 }
 
 int ft_atoi_simple(const char *str)
