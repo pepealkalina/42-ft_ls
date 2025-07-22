@@ -6,7 +6,7 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:31 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/07/22 01:18:22 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/22 02:27:49 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,27 +120,40 @@ void    read_files_recursive(char *dir_path);
 
     @param ls_info: contains the info of the dir 
 */
+int     get_max_size_len(struct stat *s_fd_info, int len_dir);
+int     get_max_str_len(char **files_array);
+int     get_max_name_len(struct dirent **files_array, int len_dir);
+void    get_name_group_col(struct stat *s_file_info, t_flags *col_size, int len);
+void    get_arg_cols(char **fds, t_flags *flag, int len);
+
 void    print_files_std(struct dirent **files_array, struct stat *s_fd_info, char **routes, t_flags *flags, int count);
+void    print_large_out(struct stat *s_file_infos,t_flags *col_size);
+void    print_column(char *str, int max_size_len);
+void    print_slink(struct stat *s_fd_info, char **routes, int i);
+
 void    sort_files_time(struct stat *s_fd_info, struct dirent **files_array, char **routes);
 void    sort_files_time_reverse(struct stat *s_fd_info, struct dirent **files_array, char **routes);
+void    sort_in_arg(char **files_array, t_flags *flags);
+void    sort_in_dir(struct dirent **dir_files, struct stat *s_fd_info, char **routes, t_flags *flags);
+
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
-void    print_large_out(struct stat *s_file_infos,t_flags *col_size);
 void    ft_putchar(char c);
 int	    ft_putnbr(long nb);
 int     ft_intlen(long size);
-int     get_max_size_len(struct stat *s_fd_info, int len_dir);
-int     get_max_name_len(struct dirent **files_array, int len_dir);
 char    **ft_split(char const *s, char c);
 void    free_doble(char **pointer);
 void    ft_not_dir_error(const char *dir);
-void    get_name_group_col(struct stat *s_file_info, t_flags *col_size, int len);
-void    print_column(char *str, int max_size_len);
 char    *ft_strdup(const char *s1);
-
-void sort_in_dir(struct dirent **dir_files, struct stat *s_fd_info, char **routes, t_flags *flags);
-int get_max_str_len(char **files_array);
-void sort_in_arg(char **files_array, t_flags *flags);
 char	**ft_free(const char **str, size_t i);
+void    ft_invalid_flag_error(char arg);
+
+void    check_files_errors(char **fds);
+int     check_file_type(char *path);
+
+char    **save_fds(int argc, char const **argv, int start_index);
+
+DIR *parse_dir(char const *dir);
+void build_path(char *buffer, size_t buffer_size, const char *base, const char *file);
 
 
 

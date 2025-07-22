@@ -6,7 +6,7 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:02:47 by preina-g          #+#    #+#             */
-/*   Updated: 2025/07/22 01:27:59 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/22 01:55:52 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,12 @@ void print_mode(mode_t st_mode)
 	ft_putchar((st_mode & S_IXGRP) ? 'x' : '-');
 	ft_putchar((st_mode & S_IROTH) ? 'r' : '-');
 	ft_putchar((st_mode & S_IWOTH) ? 'w' : '-');
+	ft_putchar((st_mode & S_IXOTH) ? 'x' : '-');
+	if (st_mode & S_ISVTX)
+	{
+		ft_putchar('T');
+		return;
+	}
 	ft_putchar((st_mode & S_IXOTH) ? 'x' : '-');
 }
 // -l

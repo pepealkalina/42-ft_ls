@@ -6,39 +6,11 @@
 /*   By: pepealkalina <pepealkalina@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:33:41 by pepealkalin       #+#    #+#             */
-/*   Updated: 2025/07/22 01:32:12 by pepealkalin      ###   ########.fr       */
+/*   Updated: 2025/07/22 02:27:07 by pepealkalin      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-
-DIR *parse_dir(char const *dir)
-{
-    // check if the first argument is a flag
-    DIR *is_dir = opendir(dir);
-    if (!dir)  
-        return (0);
-    else if (!is_dir)
-    {
-        perror(dir);
-        return (0);
-    }
-    return (is_dir);
-}
-
-
-void build_path(char *buffer, size_t buffer_size, const char *base, const char *file) 
-{
-    buffer[0] = '\0'; // Inicializa a cadena vacía
-
-    ft_strlcat(buffer, base, buffer_size - 1);
-
-    // Asegura que haya una '/' si no está ya al final
-    if (buffer[strlen(buffer) - 1] != '/')
-        ft_strlcat(buffer, "/", buffer_size - strlen(buffer) - 1);
-
-    ft_strlcat(buffer, file, buffer_size - strlen(buffer) - 1);
-}
 
 void    read_files(char *dir_path, t_flags *flags)
 {
@@ -136,119 +108,8 @@ void    read_files(char *dir_path, t_flags *flags)
         return ;
 }
 
-void print_slink(struct stat *s_fd_info, char **routes, int i)
-{
-    if (S_ISLNK(s_fd_info[i].st_mode))
-    {
-        char fd_target[PATH_MAX];
-        ssize_t len = readlink(routes[i], fd_target, sizeof(fd_target) - 1);
-        if (len == -1) 
-        {
-            perror("readlink");
-            return;
-        }
-        fd_target[len] = '\0';
-        ft_printf(" -> %s", fd_target);
-    }
-}
 
-void    print_files_std(struct dirent **files_array, struct stat *s_fd_info, char **routes, t_flags *flags, int count)
-{   
-    int col_size = get_max_name_len(files_array, count);
 
-    for (int i = 0; i < count; i++)
-    {
-        if (files_array[i]->d_name[0] == '.' && flags->flag_a != 1)
-        continue;
-        if (flags->flag_l == 1)
-        {
-            get_name_group_col(s_fd_info, flags, count);
-            print_large_out(&s_fd_info[i], flags);
-            ft_printf("%s", files_array[i]->d_name);
-            print_slink(s_fd_info, routes, i);
-            write(1, "\n", 1);
-        }
-        else
-        {
-            print_column(files_array[i]->d_name, col_size);
-            write(1, " ", 1);
-        }
-    }
-    if (flags->flag_l != 1)
-        write(1, "\n", 1);
-}
-
-void ft_invalid_flag_error(char arg)
-{
-    write(2, "Error: ", 7);
-    write(2, &arg, 1);
-    write(2, ": invalid option\n", 18);
-
-    exit(1);
-}
-
-char **save_fds(int argc, char const **argv, int start_index)
-{
-    if (start_index >= argc)
-        return (NULL);
-
-    int count = argc - start_index;
-    char **args_copy = (char **)malloc((count + 1) * sizeof(char *));
-    if (!args_copy)
-        return (NULL);
-
-    for (int i = 0; i < count; i++)
-    {
-        args_copy[i] = ft_strdup(argv[start_index + i]);
-        if (!args_copy[i])
-        {
-            // Si falla malloc, libera lo anterior
-            for (int j = 0; j < i; j++)
-                free(args_copy[j]);
-            free(args_copy);
-            return (NULL);
-        }
-    }
-    args_copy[count] = (NULL);
-    return (args_copy);
-}
-
-int check_file_type(char *path)
-{
-    struct stat path_stat;
-
-    if (lstat(path, &path_stat) == -1)
-        return -1;
-    if (S_ISDIR(path_stat.st_mode))
-        return 0;
-    if (S_ISREG(path_stat.st_mode))
-        return 1;
-    return -1;
-}
-
-void check_files_errors(char **fds)
-{
-    for (int i = 0; fds[i]; i++)
-    {
-        struct stat path_stat;
-        if (lstat(fds[i], &path_stat) == -1)
-            perror(fds[i]);
-    }
-}
-
-void get_arg_cols(char **fds, t_flags *flag, int len)
-{
-    struct stat *path_stat = (struct stat *)malloc(len * sizeof(struct stat));;
-    for (int i = 0; i < len; i++)
-    {
-        if (lstat(fds[i], &path_stat[i]) == -1)
-        {
-            break;
-        }
-    }
-    get_name_group_col(path_stat, flag, len);
-    free(path_stat);
-}
 
 
 void parse_flags(int argc, const char **argv, t_flags *flags) 
@@ -280,15 +141,13 @@ void parse_flags(int argc, const char **argv, t_flags *flags)
         else
             break;
     }
-    if (argc == 1)
+    int start = i;
+    char **fds = save_fds(argc, argv, start);
+    if (!fds)
     {
         read_files(".", flags);
         return;
     }
-    int start = i;
-    char **fds = save_fds(argc, argv, start);
-    if (!fds)
-        return;
     //sort args
     sort_in_arg(fds, flags);
     // check if there are erroneous files
@@ -311,8 +170,9 @@ void parse_flags(int argc, const char **argv, t_flags *flags)
                 if (lstat(fds[i], &path_stat) == -1)
                     continue;
                 print_large_out(&path_stat, flags);
-                ft_putchar(' ');
-                ft_printf("%s\n", fds[i]);
+                ft_printf("%s", fds[i]);
+                print_slink(&path_stat, fds, i);
+                ft_putchar('\n');
             }
             else
             {
@@ -321,19 +181,19 @@ void parse_flags(int argc, const char **argv, t_flags *flags)
             }
         }
     }
-    if (flags->flag_l != 1)
+    if (flags->flag_l != 1 && found_regfile >= 1)
         ft_putchar('\n');   
     for(i = 0; fds[i]; i++)
     {
         //mira si es un fichero
         if (check_file_type(fds[i]) == 0 && !(argc <= start))
         {
-            if (found_regfile == 0)
+            if (found_regfile == 0 && fds[i+1] != NULL)
             {
                 ft_printf("%s:\n", fds[i]);
                 found_regfile = 1;
             }
-            else
+            else if (found_regfile >= 1)
                 ft_printf("\n%s:\n", fds[i]);
             read_files(fds[i], flags);
         }
