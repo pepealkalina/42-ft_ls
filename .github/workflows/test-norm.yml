@@ -1,0 +1,55 @@
+name: CI ft_ls
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build_and_test:
+    name: Build & Norminette
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Descargar el repositorio
+    - name: Checkout code
+      uses: actions/checkout@v4
+      # Si usas submodulos para la libft, descomenta la siguiente línea:
+      # with:
+      #   submodules: recursive
+
+    # 2. Configurar Python (necesario para Norminette v3)
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    # 3. Instalar la Norminette oficial
+    - name: Install Norminette
+      run: |
+        python -m pip install --upgrade pip
+        pip install norminette
+
+    # 4. Ejecutar comprobación de la Norma
+    # Si tienes archivos que no deben pasar norma, ajusta la ruta (ej: norminette src includes)
+    - name: Run Norminette
+      run: norminette
+
+    # 5. Compilar el proyecto (Make)
+    - name: Compile (Make)
+      run: make re
+
+    # 6. Verificar que el ejecutable existe
+    - name: Verify executable
+      run: |
+        if [ -f ./ft_ls ]; then
+          echo "✅ Compilación exitosa: ft_ls creado."
+        else
+          echo "❌ Error: ft_ls no encontrado tras compilar."
+          exit 1
+        fi
+
+    # 7. Limpieza (opcional, para probar que fclean funciona)
+    - name: Test Clean
+      run: make fclean
